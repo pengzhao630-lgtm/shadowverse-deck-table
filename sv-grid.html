@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>影之诗卡组生涯表</title>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Microsoft Yahei",sans-serif}
+body{background:#eee;padding:20px;display:flex;flex-direction:column;align-items:center}
+.container{background:#fff;padding:16px}
+.tip-text{color:#c0392b;text-align:center;margin-bottom:8px;font-size:14px}
+h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
+.grid-wrap{display:grid;grid-template-columns:repeat(4, 1fr);gap:0;border:2px solid #000}
+.cell-box{display:flex;flex-direction:column;border-right:2px solid #000;border-bottom:2px solid #000}
+.cell-box:nth-child(4n){border-right:none}
+.cell-box:nth-last-child(-n+4){border-bottom:none}
+
+.cell-content{
+    width:160px;
+    height:180px;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    background:#f5f5f5;
+}
+.cell-content img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+.cell-content .text{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    padding:14px 8px 10px;
+    font-size:16px;
+    font-weight:900;
+    color:#ffffff;
+    text-align:center;
+    word-break:break-all;
+    background:linear-gradient(to top, rgba(0,0,0,.75), rgba(0,0,0,.25) 60%, transparent);
+    text-shadow:0 0 4px #000, 0 0 8px #000;
+}
+
+.label-text{text-align:center;padding:6px 2px;font-size:16px;border-top:2px solid #000;white-space:nowrap}
+.btn-save{margin-top:24px;padding:10px 28px;font-size:18px;cursor:pointer}
+
+/* 弹窗样式 */
+.modal-mask{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.5);
+    align-items:center;
+    justify-content:center;
+    z-index:999;
+}
+.modal-box{
+    background:#fff;
+    padding:24px;
+    border-radius:8px;
+    width:460px;
+    max-width:92vw;
+    max-height:90vh;
+    overflow-y:auto;
+}
+.modal-box h3{margin-bottom:16px}
+
+.section-title{
+    font-size:15px;
+    font-weight:bold;
+    margin:18px 0 10px;
+    color:#222;
+}
+.section-title:first-of-type{
+    margin-top:0;
+}
+
+.form-item{margin-bottom:14px}
+.form-item label{display:block;margin-bottom:4px}
+.form-item input{width:100%;padding:6px;font-size:16px}
+
+.modal-buttons{margin-top:20px;display:flex;gap:12px;justify-content:flex-end}
+.modal-buttons button{padding:6px 16px;font-size:16px;cursor:pointer}
+
+/* 搜索框 */
+.search-input{
+    margin-bottom:10px;
+}
+
+/* 预制卡组外层容器 */
+.card-preset-wrap{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, 76px);
+    gap:10px;
+    max-height:168px;
+    overflow-y:auto;
+    overflow-x:hidden;
+    padding:6px 0;
+}
+.card-item{
+    width:76px;
+    display:flex;
+    flex-direction:column;
+    cursor:pointer;
+    border:2px solid transparent;
+    border-radius:6px;
+    overflow:hidden;
+    background:#ddd;
+}
+.card-item:hover{
+    border-color:#4488ff;
+}
+.card-item.selected{
+    border-color:#2266dd;
+}
+.card-img{
+    width:100%;
+    height:64px;
+    object-fit:cover;
+    display:block;
+}
+.card-name{
+    font-size:11px;
+    text-align:center;
+    padding:3px 2px;
+    background:#fff;
+    color:#222;
+    line-height:1.2;
+    word-break:break-all;
+}
+.manual-edit-area{
+    padding:12px;
+    background:#f7f9fc;
+    border-radius:6px;
+}
+</style>
+</head>
+<body>
+<div class="container" id="capture-area">
+    <div class="tip-text">⚠微信内导出可能失效，建议右上角【在浏览器打开】使用</div>
+    <h1>影之诗卡组生涯表</h1>
+    <div class="grid-wrap" id="grid">
+    </div>
+</div>
+<button class="btn-save" onclick="saveImage()">导出图片PNG</button>
+
+<div class="modal-mask" id="modal">
+    <div class="modal-box">
+        <h3>编辑卡组信息</h3>
+        <div class="section-title">快速选择卡组（点击选用）</div>
+        <div class="form-item search-input">
+            <input type="text" id="searchDeck" placeholder="搜索卡组名，例如：雪华妖、进化皇">
+        </div>
+        <div class="card-preset-wrap" id="presetList"></div>
+
+        <div class="section-title">手动编辑卡组</div>
+        <div class="manual-edit-area">
+            <div class="form-item">
+                <label>卡组名称（必填）</label>
+                <input type="text" id="inputName" placeholder="例如：雪华妖">
+            </div>
+            <div class="form-item">
+                <label>卡组图片（可选，自定义上传）</label>
+                <input type="file" id="inputImg" accept="image/*">
+            </div>
+        </div>
+
+        <div class="modal-buttons">
+            <button onclick="closeModal()">取消</button>
+            <button onclick="submitData()">确认</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const labelList = [
+    "入坑卡组",
+    "最喜欢的妖精卡组",
+    "最喜欢的皇家卡组",
+    "最喜欢的法师卡组",
+    "最喜欢的龙族卡组",
+    "最喜欢的夜族卡组",
+    "最喜欢的死灵卡组",
+    "最喜欢的主教卡组",
+    "最喜欢的鱼丸卡组",
+    "最想安利的卡组",
+    "最讨厌的卡组",
+    "关服前在玩的卡组"
+];
+
+// ==========此处填充你的Base64编码==========
+const presetCardList = [
+    {name:"雪华妖", url:"粘贴雪华妖base64字符串"},
+    {name:"离场妖", url:"粘贴离场妖base64字符串"},
+    {name:"红包妖", url:"粘贴红包妖base64字符串"},
+    {name:"荣光剑士·阿尔贝尔", url:""},
+    {name:"奥秘守护者·伊莎贝尔", url:""},
+    {name:"霸食魔龙·法夫纳", url:""},
+    {name:"暗夜女王·斑比", url:""},
+    {name:"骸王·永恒之骸", url:""},
+    {name:"圣狮·雷米尔", url:""},
+    {name:"人造人·梅希亚", url:""},
+];
+
+let currentEditCell = null;
+let tempImageUrl = "";
+let tempDeckName = "";
+
+const presetWrap = document.getElementById('presetList');
+const searchInput = document.getElementById('searchDeck');
+
+function renderPresetList(list){
+    presetWrap.innerHTML = "";
+    list.forEach(card=>{
+        const wrapDiv = document.createElement('div');
+        wrapDiv.className = "card-item";
+        wrapDiv.innerHTML = `
+            <img class="card-img" ${card.url ? `src="${card.url}"` : ''}>
+            <div class="card-name">${card.name}</div>
+        `;
+        if(!card.url){
+            wrapDiv.style.opacity = "0.6";
+            wrapDiv.style.cursor = "not-allowed";
+        }else{
+            wrapDiv.onclick = ()=>{
+                tempDeckName = card.name;
+                tempImageUrl = card.url;
+                document.getElementById('inputName').value = card.name;
+                document.querySelectorAll('.card-item').forEach(el=>el.classList.remove('selected'));
+                wrapDiv.classList.add('selected');
+            }
+        }
+        presetWrap.appendChild(wrapDiv);
+    })
+}
+renderPresetList(presetCardList);
+
+searchInput.addEventListener('input', function(){
+    const keyword = this.value.trim().toLowerCase();
+    const filtered = presetCardList.filter(card=> card.name.toLowerCase().includes(keyword));
+    renderPresetList(filtered);
+});
+
+const gridDom = document.getElementById('grid');
+labelList.forEach(label=>{
+    const box = document.createElement('div');
+    box.className = 'cell-box';
+    box.innerHTML = `
+        <div class="cell-content">
+            <div class="text"></div>
+        </div>
+        <div class="label-text">${label}</div>
+    `;
+    const contentArea = box.querySelector('.cell-content');
+    contentArea.onclick = ()=>{
+        currentEditCell = contentArea;
+        openModal();
+    };
+    gridDom.appendChild(box);
+})
+
+const modal = document.getElementById('modal');
+const inputName = document.getElementById('inputName');
+const inputImg = document.getElementById('inputImg');
+
+function openModal(){
+    modal.style.display = 'flex';
+    const existingText = currentEditCell.querySelector('.text')?.textContent || "";
+    const existingImg = currentEditCell.querySelector('img[src]')?.src || "";
+    inputName.value = existingText;
+    tempDeckName = existingText;
+    tempImageUrl = existingImg;
+    inputImg.value = "";
+    searchInput.value = "";
+    renderPresetList(presetCardList);
+    document.querySelectorAll('.card-item').forEach(el=>el.classList.remove('selected'));
+}
+function closeModal(){
+    modal.style.display = 'none';
+}
+
+inputImg.onchange = function(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = evt=>{
+        tempImageUrl = evt.target.result;
+        document.querySelectorAll('.card-item').forEach(el=>el.classList.remove('selected'));
+    }
+    reader.readAsDataURL(file);
+}
+
+function submitData(){
+    const name = inputName.value.trim();
+    if(!name){
+        alert("请填写卡组名称！");
+        return;
+    }
+    if(!currentEditCell) return;
+    currentEditCell.innerHTML = `
+        <img src="${tempImageUrl || ''}" onerror="this.style.display='none'">
+        <div class="text">${name}</div>
+    `;
+    closeModal();
+}
+
+async function saveImage(){
+    const dom = document.getElementById('capture-area');
+    try{
+        const canvas = await html2canvas(dom, {
+            scale: 2,
+            backgroundColor: "#ffffff",
+            useCORS: true,
+            allowTaint: false,
+            foreignObjectRendering: false
+        });
+        const link = document.createElement('a');
+        link.download = "影之诗卡组生涯表.png";
+        link.href = canvas.toDataURL("image/png");
+        if(/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            const newTab = window.open();
+            newTab.document.body.innerHTML = `<img src="${link.href}" style="width:100%"><p>长按图片保存到相册</p>`;
+        }else{
+            link.click();
+        }
+    }catch(err){
+        alert("导出失败！推荐使用系统自带浏览器打开页面");
+        console.error(err);
+    }
+}
+</script>
+</body>
+</html>
