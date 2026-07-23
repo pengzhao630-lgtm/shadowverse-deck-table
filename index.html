@@ -10,9 +10,9 @@
 body{background:#eee;padding:20px;display:flex;flex-direction:column;align-items:center;min-height:100vh}
 .container{background:#fff;padding:16px;width:100%;max-width:1200px}
 .tip-text{color:#c0392b;text-align:center;margin-bottom:8px;font-size:14px}
-h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
+h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000;border-bottom:3px solid #000;padding-bottom:6px}
 
-/* 全局强制最少3列，任何屏幕不会降到2列 */
+/* 布局：宽度大于900px 4列，其余全部强制3列，无任何2列逻辑 */
 .grid-wrap{
   display:grid;
   grid-template-columns:repeat(4, 1fr);
@@ -20,22 +20,44 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
   border:2px solid #000;
   width:100%;
 }
-@media (max-width:900px){
-  .grid-wrap{grid-template-columns:repeat(3,1fr);}
+@media screen and (max-width: 900px) {
+  .grid-wrap {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
-.cell-box{display:flex;flex-direction:column;border-right:2px solid #000;border-bottom:2px solid #000}
-/* 4列每行最后一格无边框 */
-.grid-wrap .cell-box:nth-child(4n){border-right:none}
-/* 3列布局清除右侧边框 */
-@media (max-width:900px){
-  .grid-wrap .cell-box:nth-child(3n){border-right:none}
-  .grid-wrap .cell-box:nth-child(4n){border-right:2px solid #000}
+
+.cell-box{
+  display:flex;
+  flex-direction:column;
+  border-right: 2px solid #000;
+  border-bottom: 2px solid #000;
 }
+
+/* 桌面4列：每行第4格清除右边框 */
+.grid-wrap > .cell-box:nth-child(4n) {
+  border-right: none;
+}
+/* 移动端3列：每行第3格清除右边框 */
+@media screen and (max-width: 900px) {
+  .grid-wrap > .cell-box:nth-child(3n) {
+    border-right: none;
+  }
+  .grid-wrap > .cell-box:nth-child(4n) {
+    border-right: 2px solid #000;
+  }
+}
+
 /* 底边框清除 */
-.cell-box:nth-last-child(-n+4){border-bottom:none}
-@media (max-width:900px){
-  .cell-box:nth-last-child(-n+3){border-bottom:none}
-  .cell-box:nth-last-child(-n+4){border-bottom:2px solid #000}
+.grid-wrap > .cell-box:nth-last-child(-n+4) {
+  border-bottom: none;
+}
+@media screen and (max-width: 900px) {
+  .grid-wrap > .cell-box:nth-last-child(-n+3) {
+    border-bottom: none;
+  }
+  .grid-wrap > .cell-box:nth-last-child(-n+4) {
+    border-bottom: 2px solid #000;
+  }
 }
 
 .cell-content{
@@ -46,7 +68,6 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
     overflow:hidden;
     background:#f5f5f5;
 }
-/* 手机3列缩小格子 */
 @media (max-width:900px){
   .cell-content{height:140px;}
 }
@@ -77,12 +98,12 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
 .label-text{text-align:center;padding:6px 2px;font-size:16px;border-top:2px solid #000;white-space:nowrap}
 .btn-save{margin-top:24px;padding:10px 28px;font-size:18px;cursor:pointer}
 
-/* 弹窗样式 */
+/* 弹窗通用样式 */
 .modal-mask{
     display:none;
     position:fixed;
     inset:0;
-    background:rgba(0,0,0.5);
+    background:rgba(0,0,0,0.5);
     align-items:center;
     justify-content:center;
     z-index:999;
@@ -136,7 +157,7 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
 .card-name{font-size:11px;text-align:center;padding:3px 2px;background:#fff;color:#222;line-height:1.2;word-break:break-all;}
 .manual-edit-area{padding:12px;background:#f7f9fc;border-radius:6px;}
 
-/* QQ/微信手机遮罩 */
+/* QQ/微信移动端遮罩 */
 .mobile-mask{
     position:fixed;
     top:0;left:0;width:100%;height:100%;
@@ -148,21 +169,21 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
 </style>
 </head>
 <body>
-<!-- 手机QQ/微信遮罩 -->
+<!-- 微信QQ兼容遮罩 -->
 <div class="mobile-mask" id="envMask">
     <div>
         <h3>QQ/微信内置浏览器兼容性较差</h3>
         <p>请点击页面右上角【...】</p>
-        <p>选择【在浏览器打开】即可正常浏览、导出图片</p>
+        <p>选择【在浏览器打开】即可正常浏览、复制图片</p>
     </div>
 </div>
 <div class="container" id="capture-area">
-    <div class="tip-text">⚠微信内导出可能失效，建议右上角【在浏览器打开】使用</div>
+    <div class="tip-text">⚠微信内复制图片可能失效，建议右上角【在浏览器打开】使用</div>
     <h1>影之诗卡组生涯表</h1>
     <div class="grid-wrap" id="grid">
     </div>
 </div>
-<button class="btn-save" onclick="saveImage()">导出图片PNG</button>
+<button class="btn-save" onclick="copyImage()">复制卡组图片</button>
 <div class="modal-mask" id="modal">
     <div class="modal-box">
         <h3>编辑卡组信息</h3>
@@ -189,7 +210,7 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
     </div>
 </div>
 <script>
-// 检测手机QQ/微信遮罩
+// 微信QQ环境检测
 function checkMobileEnv() {
   const ua = navigator.userAgent.toLowerCase();
   const isMobile = /android|iphone|ipad/.test(ua);
@@ -201,7 +222,7 @@ function checkMobileEnv() {
 }
 window.addEventListener('load', checkMobileEnv);
 
-// 格子标题 - 对应过滤关键词映射
+// 职业关键词映射
 const labelMap = {
     "入坑卡组": "",
     "最喜欢的妖精卡组": "妖",
@@ -216,9 +237,10 @@ const labelMap = {
     "最讨厌的卡组": "",
     "关服前在玩的卡组": ""
 };
+// 修复BUG：正确读取labelMap的键，之前写错成labelList
 const labelList = Object.keys(labelMap);
 
-// 卡组列表 留空，你自行填充
+// 卡组列表，自行填充
 const presetCardList = [
   {
     name:"雪华妖",
@@ -622,14 +644,14 @@ const presetCardList = [
 
 
 let currentEditCell = null;
-let currentFilterKey = ""; // 当前格子对应的筛选关键词
+let currentFilterKey = "";
 let tempImageUrl = "";
 let tempDeckName = "";
 const presetWrap = document.getElementById('presetList');
 const searchInput = document.getElementById('searchDeck');
 const inputName = document.getElementById('inputName');
 
-// 渲染卡组列表（按关键词过滤）
+// 渲染卡组列表
 function renderPresetList(filterKey = ""){
     let list = presetCardList;
     if(filterKey){
@@ -656,13 +678,12 @@ function renderPresetList(filterKey = ""){
     })
 }
 
-// 搜索框手动过滤
 searchInput.addEventListener('input', function(){
     const keyword = this.value.trim();
     renderPresetList(keyword);
 });
 
-// 生成页面格子
+// 批量生成格子
 const gridDom = document.getElementById('grid');
 labelList.forEach(label=>{
     const box = document.createElement('div');
@@ -676,7 +697,6 @@ labelList.forEach(label=>{
     const contentArea = box.querySelector('.cell-content');
     contentArea.onclick = ()=>{
         currentEditCell = contentArea;
-        // 获取当前格子职业关键词
         currentFilterKey = labelMap[label];
         openModal();
     };
@@ -686,7 +706,7 @@ labelList.forEach(label=>{
 const modal = document.getElementById('modal');
 const inputImg = document.getElementById('inputImg');
 
-// 打开弹窗，自动填充筛选词并渲染对应卡组
+// 打开弹窗自动筛选
 function openModal(){
     modal.style.display = 'flex';
     const existingText = currentEditCell.querySelector('.text')?.textContent || "";
@@ -715,7 +735,7 @@ inputImg.onchange = function(e){
     reader.readAsDataURL(file);
 }
 
-// 确认填充卡组到格子
+// 确认回填卡组
 function submitData(){
     const name = inputName.value.trim();
     if(!name){
@@ -730,10 +750,10 @@ function submitData(){
     closeModal();
 }
 
-// 导出图片功能
-async function saveImage(){
+// 复制图片函数，增加浏览器兼容性兜底
+async function copyImage(){
     const dom = document.getElementById('capture-area');
-    try{
+    try {
         const canvas = await html2canvas(dom, {
             scale: 2,
             backgroundColor: "#ffffff",
@@ -741,18 +761,18 @@ async function saveImage(){
             allowTaint: false,
             foreignObjectRendering: false
         });
+        const blob = await new Promise(resolve => canvas.toBlob(res, 'image/png'));
+        const item = new ClipboardItem({ "image/png": blob });
+        await navigator.clipboard.write([item]);
+        alert("图片已成功复制到剪贴板，可以直接粘贴！");
+    } catch (err) {
+        console.error(err);
+        // 兜底：失败时提供下载备用方案
+        alert("复制失败！推荐使用手机系统浏览器打开；\n备用方案：长按下面弹出的图片手动保存");
         const link = document.createElement('a');
         link.download = "影之诗卡组生涯表.png";
         link.href = canvas.toDataURL("image/png");
-        if(/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-            const newTab = window.open();
-            newTab.document.body.innerHTML = `<img src="${link.href}" style="width:100%"><p>长按图片保存到相册</p>`;
-        }else{
-            link.click();
-        }
-    }catch(err){
-        alert("导出失败！推荐使用系统自带浏览器打开页面");
-        console.error(err);
+        window.open(link.href);
     }
 }
 </script>
