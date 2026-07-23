@@ -2,7 +2,6 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<!-- 唯一标准移动端视口，解决手机排版错乱 -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>影之诗卡组生涯表</title>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -12,7 +11,8 @@ body{background:#eee;padding:20px;display:flex;flex-direction:column;align-items
 .container{background:#fff;padding:16px;width:100%;max-width:1200px}
 .tip-text{color:#c0392b;text-align:center;margin-bottom:8px;font-size:14px}
 h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
-/* 移动端自适应网格：大屏4列，平板2列，手机1列 */
+
+/* 网格布局：大屏4列、常规手机3列、超小屏2列，最低保障3列绝大多数场景 */
 .grid-wrap{
   display:grid;
   grid-template-columns:repeat(4, 1fr);
@@ -20,31 +20,44 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
   border:2px solid #000;
   width:100%;
 }
-@media (max-width:900px){
+/* 平板：3列 */
+@media (max-width:900px) and (min-width:721px){
+  .grid-wrap{grid-template-columns:repeat(3,1fr);}
+}
+/* 主流手机：强制3列 */
+@media (max-width:720px) and (min-width:421px){
+  .grid-wrap{grid-template-columns:repeat(3,1fr);}
+}
+/* 仅极小老旧手机：2列 */
+@media (max-width:420px){
   .grid-wrap{grid-template-columns:repeat(2,1fr);}
 }
-@media (max-width:480px){
-  .grid-wrap{grid-template-columns:repeat(1,1fr);}
-}
+
 .cell-box{display:flex;flex-direction:column;border-right:2px solid #000;border-bottom:2px solid #000}
-/* 4列布局清除最后一行右边框 */
-.grid-wrap.grid-template-columns\:repeat(4,1fr) .cell-box:nth-child(4n){border-right:none}
-/* 2列布局清除右边框 */
+/* 4列：每行第4个清除右边框 */
+.grid-wrap .cell-box:nth-child(4n){border-right:none}
+/* 3列适配边框 */
 @media (max-width:900px){
-  .cell-box:nth-child(2n){border-right:none}
+  .grid-wrap .cell-box:nth-child(3n){border-right:none}
+  .grid-wrap .cell-box:nth-child(4n){border-right:2px solid #000}
 }
-/* 单列无需清除右边框 */
-@media (max-width:480px){
-  .cell-box{border-right:none}
+/* 2列适配边框 */
+@media (max-width:420px){
+  .grid-wrap .cell-box:nth-child(2n){border-right:none}
+  .grid-wrap .cell-box:nth-child(3n){border-right:2px solid #000}
 }
-/* 所有行最后一排去除底边框 */
+
+/* 底边框适配清除 */
 .cell-box:nth-last-child(-n+4){border-bottom:none}
 @media (max-width:900px){
+  .cell-box:nth-last-child(-n+3){border-bottom:none}
+  .cell-box:nth-last-child(-n+4){border-bottom:2px solid #000}
+}
+@media (max-width:420px){
   .cell-box:nth-last-child(-n+2){border-bottom:none}
+  .cell-box:nth-last-child(-n+3){border-bottom:2px solid #000}
 }
-@media (max-width:480px){
-  .cell-box:last-child{border-bottom:none}
-}
+
 .cell-content{
     width:100%;
     height:180px;
@@ -53,9 +66,14 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
     overflow:hidden;
     background:#f5f5f5;
 }
-@media (max-width:480px){
-  .cell-content{height:220px;}
+/* 手机3列缩小格子高度 */
+@media (max-width:720px){
+  .cell-content{height:140px;}
 }
+@media (max-width:420px){
+  .cell-content{height:160px;}
+}
+
 .cell-content img{
     width:100%;
     height:100%;
@@ -76,8 +94,18 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
     background:linear-gradient(to top, rgba(0,0,0,.75), rgba(0,0,0,.25) 60%, transparent);
     text-shadow:0 0 4px #000, 0 0 8px #000;
 }
+/* 小屏文字缩小 */
+@media (max-width:720px){
+  .label-text{
+    font-size:14px;
+  }
+  .cell-content .text{
+    font-size:14px;
+  }
+}
 .label-text{text-align:center;padding:6px 2px;font-size:16px;border-top:2px solid #000;white-space:nowrap}
 .btn-save{margin-top:24px;padding:10px 28px;font-size:18px;cursor:pointer}
+
 /* 弹窗样式 */
 .modal-mask{
     display:none;
@@ -113,11 +141,9 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
 .form-item input{width:100%;padding:6px;font-size:16px}
 .modal-buttons{margin-top:20px;display:flex;gap:12px;justify-content:flex-end}
 .modal-buttons button{padding:6px 16px;font-size:16px;cursor:pointer}
-/* 搜索框 */
 .search-input{
     margin-bottom:10px;
 }
-/* 预制卡组外层容器 */
 .card-preset-wrap{
     display:grid;
     grid-template-columns: repeat(auto-fill, 76px);
@@ -163,6 +189,7 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
     background:#f7f9fc;
     border-radius:6px;
 }
+
 /* QQ/微信手机遮罩 */
 .mobile-mask{
     position:fixed;
@@ -303,10 +330,6 @@ const presetCardList = [
 {
     name:"拉提卡妖",
     url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/latika.png"
-  },
-{
-    name:"牛仔妖",
-    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/niuzai.png"
   },
 {
     name:"中立妖",
@@ -668,6 +691,8 @@ let tempImageUrl = "";
 let tempDeckName = "";
 const presetWrap = document.getElementById('presetList');
 const searchInput = document.getElementById('searchDeck');
+const inputName = document.getElementById('inputName');
+
 function renderPresetList(list){
     presetWrap.innerHTML = "";
     list.forEach(card=>{
@@ -684,6 +709,8 @@ function renderPresetList(list){
             wrapDiv.onclick = ()=>{
                 tempDeckName = card.name;
                 tempImageUrl = card.url;
+                // 修复BUG：点击卡组，自动回填名称到输入框
+                inputName.value = card.name;
                 document.querySelectorAll('.card-item').forEach(el=>el.classList.remove('selected'));
                 wrapDiv.classList.add('selected');
             }
@@ -715,8 +742,6 @@ labelList.forEach(label=>{
     gridDom.appendChild(box);
 })
 const modal = document.getElementById('modal');
-const inputName = document.getElementById('inputName');
-const inputImg = document.getElementById('inputImg');
 function openModal(){
     modal.style.display = 'flex';
     const existingText = currentEditCell.querySelector('.text')?.textContent || "";
