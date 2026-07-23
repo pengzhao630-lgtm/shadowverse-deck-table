@@ -12,7 +12,7 @@ body{background:#eee;padding:20px;display:flex;flex-direction:column;align-items
 .tip-text{color:#c0392b;text-align:center;margin-bottom:8px;font-size:14px}
 h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
 
-/* 网格布局：大屏4列、常规手机3列、超小屏2列，最低保障3列绝大多数场景 */
+/* 全局强制最少3列，任何屏幕不会降到2列 */
 .grid-wrap{
   display:grid;
   grid-template-columns:repeat(4, 1fr);
@@ -20,42 +20,22 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
   border:2px solid #000;
   width:100%;
 }
-/* 平板：3列 */
-@media (max-width:900px) and (min-width:721px){
+@media (max-width:900px){
   .grid-wrap{grid-template-columns:repeat(3,1fr);}
 }
-/* 主流手机：强制3列 */
-@media (max-width:720px) and (min-width:421px){
-  .grid-wrap{grid-template-columns:repeat(3,1fr);}
-}
-/* 仅极小老旧手机：2列 */
-@media (max-width:420px){
-  .grid-wrap{grid-template-columns:repeat(2,1fr);}
-}
-
 .cell-box{display:flex;flex-direction:column;border-right:2px solid #000;border-bottom:2px solid #000}
-/* 4列：每行第4个清除右边框 */
+/* 4列每行最后一格无边框 */
 .grid-wrap .cell-box:nth-child(4n){border-right:none}
-/* 3列适配边框 */
+/* 3列布局清除右侧边框 */
 @media (max-width:900px){
   .grid-wrap .cell-box:nth-child(3n){border-right:none}
   .grid-wrap .cell-box:nth-child(4n){border-right:2px solid #000}
 }
-/* 2列适配边框 */
-@media (max-width:420px){
-  .grid-wrap .cell-box:nth-child(2n){border-right:none}
-  .grid-wrap .cell-box:nth-child(3n){border-right:2px solid #000}
-}
-
-/* 底边框适配清除 */
+/* 底边框清除 */
 .cell-box:nth-last-child(-n+4){border-bottom:none}
 @media (max-width:900px){
   .cell-box:nth-last-child(-n+3){border-bottom:none}
   .cell-box:nth-last-child(-n+4){border-bottom:2px solid #000}
-}
-@media (max-width:420px){
-  .cell-box:nth-last-child(-n+2){border-bottom:none}
-  .cell-box:nth-last-child(-n+3){border-bottom:2px solid #000}
 }
 
 .cell-content{
@@ -66,14 +46,10 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
     overflow:hidden;
     background:#f5f5f5;
 }
-/* 手机3列缩小格子高度 */
-@media (max-width:720px){
+/* 手机3列缩小格子 */
+@media (max-width:900px){
   .cell-content{height:140px;}
 }
-@media (max-width:420px){
-  .cell-content{height:160px;}
-}
-
 .cell-content img{
     width:100%;
     height:100%;
@@ -94,14 +70,9 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
     background:linear-gradient(to top, rgba(0,0,0,.75), rgba(0,0,0,.25) 60%, transparent);
     text-shadow:0 0 4px #000, 0 0 8px #000;
 }
-/* 小屏文字缩小 */
-@media (max-width:720px){
-  .label-text{
-    font-size:14px;
-  }
-  .cell-content .text{
-    font-size:14px;
-  }
+@media (max-width:900px){
+  .label-text{font-size:14px;}
+  .cell-content .text{font-size:14px;}
 }
 .label-text{text-align:center;padding:6px 2px;font-size:16px;border-top:2px solid #000;white-space:nowrap}
 .btn-save{margin-top:24px;padding:10px 28px;font-size:18px;cursor:pointer}
@@ -111,7 +82,7 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
     display:none;
     position:fixed;
     inset:0;
-    background:rgba(0,0,0,0.5);
+    background:rgba(0,0,0.5);
     align-items:center;
     justify-content:center;
     z-index:999;
@@ -133,17 +104,13 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
     margin:18px 0 10px;
     color:#222;
 }
-.section-title:first-of-type{
-    margin-top:0;
-}
+.section-title:first-of-type{margin-top:0;}
 .form-item{margin-bottom:14px}
 .form-item label{display:block;margin-bottom:4px}
 .form-item input{width:100%;padding:6px;font-size:16px}
 .modal-buttons{margin-top:20px;display:flex;gap:12px;justify-content:flex-end}
 .modal-buttons button{padding:6px 16px;font-size:16px;cursor:pointer}
-.search-input{
-    margin-bottom:10px;
-}
+.search-input{margin-bottom:10px;}
 .card-preset-wrap{
     display:grid;
     grid-template-columns: repeat(auto-fill, 76px);
@@ -163,58 +130,21 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
     overflow:hidden;
     background:#ddd;
 }
-.card-item:hover{
-    border-color:#4488ff;
-}
-.card-item.selected{
-    border-color:#2266dd;
-}
-.card-img{
-    width:100%;
-    height:64px;
-    object-fit:cover;
-    display:block;
-}
-.card-name{
-    font-size:11px;
-    text-align:center;
-    padding:3px 2px;
-    background:#fff;
-    color:#222;
-    line-height:1.2;
-    word-break:break-all;
-}
-.manual-edit-area{
-    padding:12px;
-    background:#f7f9fc;
-    border-radius:6px;
-}
+.card-item:hover{border-color:#4488ff;}
+.card-item.selected{border-color:#2266dd;}
+.card-img{width:100%;height:64px;object-fit:cover;display:block;}
+.card-name{font-size:11px;text-align:center;padding:3px 2px;background:#fff;color:#222;line-height:1.2;word-break:break-all;}
+.manual-edit-area{padding:12px;background:#f7f9fc;border-radius:6px;}
 
 /* QQ/微信手机遮罩 */
 .mobile-mask{
     position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:#fff;
-    z-index:9999;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:24px;
+    top:0;left:0;width:100%;height:100%;
+    background:#fff;z-index:9999;display:none;
+    align-items:center;justify-content:center;text-align:center;padding:24px;
 }
-.mobile-mask h3{
-    color:#222;
-    margin-bottom:12px;
-    font-size:20px;
-}
-.mobile-mask p{
-    color:#666;
-    font-size:16px;
-    line-height:1.6;
-}
+.mobile-mask h3{color:#222;margin-bottom:12px;font-size:20px;}
+.mobile-mask p{color:#666;font-size:16px;line-height:1.6;}
 </style>
 </head>
 <body>
@@ -238,7 +168,7 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
         <h3>编辑卡组信息</h3>
         <div class="section-title">快速选择卡组（点击选用）</div>
         <div class="form-item search-input">
-            <input type="text" id="searchDeck" placeholder="搜索卡组名，例如：雪华妖、进化皇">
+            <input type="text" id="searchDeck" placeholder="自动筛选对应职业卡组，可手动修改关键词">
         </div>
         <div class="card-preset-wrap" id="presetList"></div>
         <div class="section-title">手动编辑卡组</div>
@@ -259,7 +189,7 @@ h1{text-align:center;font-size:36px;margin-bottom:16px;color:#000}
     </div>
 </div>
 <script>
-// 检测手机QQ/微信并弹出遮罩
+// 检测手机QQ/微信遮罩
 function checkMobileEnv() {
   const ua = navigator.userAgent.toLowerCase();
   const isMobile = /android|iphone|ipad/.test(ua);
@@ -271,21 +201,24 @@ function checkMobileEnv() {
 }
 window.addEventListener('load', checkMobileEnv);
 
-const labelList = [
-    "入坑卡组",
-    "最喜欢的妖精卡组",
-    "最喜欢的皇家卡组",
-    "最喜欢的法师卡组",
-    "最喜欢的龙族卡组",
-    "最喜欢的夜族卡组",
-    "最喜欢的死灵卡组",
-    "最喜欢的主教卡组",
-    "最喜欢的鱼丸卡组",
-    "最想安利的卡组",
-    "最讨厌的卡组",
-    "关服前在玩的卡组"
-];
-// ==========卡组图片远程链接列表==========
+// 格子标题 - 对应过滤关键词映射
+const labelMap = {
+    "入坑卡组": "",
+    "最喜欢的妖精卡组": "妖",
+    "最喜欢的皇家卡组": "皇",
+    "最喜欢的法师卡组": "法",
+    "最喜欢的龙族卡组": "龙",
+    "最喜欢的夜族卡组": "鬼",
+    "最喜欢的死灵卡组": "死",
+    "最喜欢的主教卡组": "教",
+    "最喜欢的鱼丸卡组": "仇",
+    "最想安利的卡组": "",
+    "最讨厌的卡组": "",
+    "关服前在玩的卡组": ""
+};
+const labelList = Object.keys(labelMap);
+
+// 卡组列表 留空，你自行填充
 const presetCardList = [
   {
     name:"雪华妖",
@@ -686,22 +619,27 @@ const presetCardList = [
     url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/kuanrongchou.png"
   }
 ];
+
+
 let currentEditCell = null;
+let currentFilterKey = ""; // 当前格子对应的筛选关键词
 let tempImageUrl = "";
 let tempDeckName = "";
 const presetWrap = document.getElementById('presetList');
 const searchInput = document.getElementById('searchDeck');
 const inputName = document.getElementById('inputName');
 
-function renderPresetList(list){
+// 渲染卡组列表（按关键词过滤）
+function renderPresetList(filterKey = ""){
+    let list = presetCardList;
+    if(filterKey){
+        list = list.filter(item => item.name.includes(filterKey));
+    }
     presetWrap.innerHTML = "";
     list.forEach(card=>{
         const wrapDiv = document.createElement('div');
         wrapDiv.className = "card-item";
-        wrapDiv.innerHTML = `
-            <img class="card-img" ${card.url ? `src="${card.url}"` : ''}>
-            <div class="card-name">${card.name}</div>
-        `;
+        wrapDiv.innerHTML = `<img class="card-img" ${card.url ? `src="${card.url}"` : ''}><div class="card-name">${card.name}</div>`;
         if(!card.url){
             wrapDiv.style.opacity = "0.6";
             wrapDiv.style.cursor = "not-allowed";
@@ -709,7 +647,6 @@ function renderPresetList(list){
             wrapDiv.onclick = ()=>{
                 tempDeckName = card.name;
                 tempImageUrl = card.url;
-                // 修复BUG：点击卡组，自动回填名称到输入框
                 inputName.value = card.name;
                 document.querySelectorAll('.card-item').forEach(el=>el.classList.remove('selected'));
                 wrapDiv.classList.add('selected');
@@ -718,12 +655,14 @@ function renderPresetList(list){
         presetWrap.appendChild(wrapDiv);
     })
 }
-renderPresetList(presetCardList);
+
+// 搜索框手动过滤
 searchInput.addEventListener('input', function(){
-    const keyword = this.value.trim().toLowerCase();
-    const filtered = presetCardList.filter(card=> card.name.toLowerCase().includes(keyword));
-    renderPresetList(filtered);
+    const keyword = this.value.trim();
+    renderPresetList(keyword);
 });
+
+// 生成页面格子
 const gridDom = document.getElementById('grid');
 labelList.forEach(label=>{
     const box = document.createElement('div');
@@ -737,11 +676,17 @@ labelList.forEach(label=>{
     const contentArea = box.querySelector('.cell-content');
     contentArea.onclick = ()=>{
         currentEditCell = contentArea;
+        // 获取当前格子职业关键词
+        currentFilterKey = labelMap[label];
         openModal();
     };
     gridDom.appendChild(box);
 })
+
 const modal = document.getElementById('modal');
+const inputImg = document.getElementById('inputImg');
+
+// 打开弹窗，自动填充筛选词并渲染对应卡组
 function openModal(){
     modal.style.display = 'flex';
     const existingText = currentEditCell.querySelector('.text')?.textContent || "";
@@ -750,13 +695,15 @@ function openModal(){
     tempDeckName = existingText;
     tempImageUrl = existingImg;
     inputImg.value = "";
-    searchInput.value = "";
-    renderPresetList(presetCardList);
+    searchInput.value = currentFilterKey;
+    renderPresetList(currentFilterKey);
     document.querySelectorAll('.card-item').forEach(el=>el.classList.remove('selected'));
 }
 function closeModal(){
     modal.style.display = 'none';
 }
+
+// 自定义图片上传
 inputImg.onchange = function(e){
     const file = e.target.files[0];
     if(!file) return;
@@ -767,6 +714,8 @@ inputImg.onchange = function(e){
     }
     reader.readAsDataURL(file);
 }
+
+// 确认填充卡组到格子
 function submitData(){
     const name = inputName.value.trim();
     if(!name){
@@ -780,6 +729,8 @@ function submitData(){
     `;
     closeModal();
 }
+
+// 导出图片功能
 async function saveImage(){
     const dom = document.getElementById('capture-area');
     try{
