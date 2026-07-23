@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
+<script>
+function getBrowserEnv(){
+  const ua = navigator.userAgent.toLowerCase();
+  const isMobile = /android|iphone|ipad/.test(ua);
+  const isWechat = ua.includes('micromessenger');
+  const isQQ = ua.includes('mqq') && !ua.includes('mqqbrowser');
+  return {isMobile,isWechat,isQQ};
+}
+window.addEventListener('load',()=>{
+  const {isMobile,isWechat,isQQ} = getBrowserEnv();
+  if(isMobile && (isWechat || isQQ)){
+    const mask = document.createElement('div');
+    mask.style=`position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;z-index:9999;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;`
+    mask.innerHTML=`
+    <div>
+      <h3>当前QQ/微信内置浏览器无法正常加载网站</h3>
+      <p style="margin-top:16px;color:#666">请点击右上角【...】→ <b>在浏览器打开</b></p>
+    </div>
+    `
+    document.body.appendChild(mask);
+  }
+})
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>影之诗卡组生涯表</title>
@@ -393,9 +416,209 @@ const presetCardList = [
  {
     name:"弃牌龙",
     url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/qipailong.png"
+  },
+ {
+    name:"谢幕死",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/xiemusi.png"
+  },
+ {
+    name:"骸王死",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/haiwangsi.png"
+  },
+ {
+    name:"格莫瑞死",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/gemoruisi.png"
+  },
+ {
+    name:"机械死",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/jixiesi.png"
+  },
+ {
+    name:"怨灵死",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/yuanlingsi.png"
+  },
+ {
+    name:"亡召死",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/wangzhaosi.png"
+  },
+ {
+    name:"阿卡死",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/akasi.png"
+  },
+ {
+    name:"葬送死",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/zangsongsi.png"
+  },
+ {
+    name:"冥府死",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/mingfusi.png"
+  },
+ {
+    name:"扭蛋死",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/niudansi.png"
+  },
+ {
+    name:"进化死",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/jinhuasi.png"
+  },
+ {
+    name:"进化鬼",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/jinhuagui.png"
+  },
+ {
+    name:"机械鬼",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/jixiegui.png"
   }
-
-
+,
+ {
+    name:"狂乱鬼",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/kuangluangui.png"
+  }
+,
+ {
+    name:"复仇鬼",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/fuchougui.png"
+  }
+,
+ {
+    name:"消抽鬼",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/xiaochougui.png"
+  }
+,
+ {
+    name:"黄衣鬼",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/huangyigui.png"
+  }
+,
+ {
+    name:"宇宙鬼",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/yuzhougui.png"
+  }
+,
+ {
+    name:"莉莉姆鬼",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/lulumugui.png"
+  }
+,
+ {
+    name:"悖德鬼",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/beidegui.png"
+  }
+,
+ {
+    name:"永火鬼",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/yonghuogui.png"
+  }
+,
+ {
+    name:"深渊鬼",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/shenyuangui.png"
+  }
+,
+ {
+    name:"扭蛋鬼",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/niudangui.png"
+  },
+ {
+    name:"奶泡教",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/naipaojiao.png"
+  },
+ {
+    name:"教会教",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/jiaohuijiao.png"
+  },
+ {
+    name:"狮子教",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/shengshijiao.png"
+  },
+ {
+    name:"守冲教",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/shouchongjiao.png"
+  },
+ {
+    name:"护符教",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/hufujiao.png"
+  },
+ {
+    name:"耶拉教",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/yelajiao.png"
+  },
+ {
+    name:"三轴教",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/sanzhoujiao.png"
+  },
+ {
+    name:"伊利斯教",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/yilisijiao.png"
+  },
+ {
+    name:"进化教",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/jinhuajiao.png"
+  },
+ {
+    name:"大哥教",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/dagejiao.png"
+  },
+ {
+    name:"邪教",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/xiejiao.png"
+  },
+ {
+    name:"dkk教",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/ddkjiao.png"
+  },
+ {
+    name:"反甲教",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/fanjiajiao.png"
+  },
+ {
+    name:"中立教",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/zhonglijiao.png"
+  },
+ {
+    name:"天使教",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/tianshijiao.png"
+  },
+ {
+    name:"蹲坑教",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/dunkengjiao.png"
+  },
+ {
+    name:"造物仇",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/zaowuchou.png"
+  },
+ {
+    name:"爆能仇",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/baonengchou.png"
+  },
+ {
+    name:"人偶仇",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/renouchou.png"
+  },
+ {
+    name:"灾祸仇",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/zaihuochou.png"
+  },
+ {
+    name:"世界末日仇",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/shijimorichou.png"
+  },
+ {
+    name:"机械仇",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/jixeichou.png"
+  },
+ {
+    name:"进化仇",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/jinhuachou.png"
+  },
+ {
+    name:"二妹仇",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/ermeichou.png"
+  },
+ {
+    name:"宽容仇",
+    url:"https://raw.githubusercontent.com/pengzhao630-lgtm/shadowverse-deck-table/refs/heads/main/kuanrongchou.png"
+  }
 ];
 let currentEditCell = null;
 let tempImageUrl = "";
